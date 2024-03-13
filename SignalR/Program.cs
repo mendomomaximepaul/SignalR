@@ -1,3 +1,4 @@
+using SignalR.ChatHub;
 using SignalR.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,10 +17,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.MapHub<ChatHub>("/chathub");
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

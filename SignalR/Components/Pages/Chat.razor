@@ -1,0 +1,36 @@
+﻿@page "/chat"
+
+@using Microsoft.AspNetCore.SignalR
+@using Microsoft.AspNetCore.SignalR.Client
+@using SignalR.ChatHub;
+@inject IHubContext<ChatHub> chatHub
+
+<h1>Chat</h1>
+
+<input type="text" @bind="Message" />
+<button @onclick="Send">Send</button>
+
+@code {
+    private HubConnection hubConnection;
+    private string Message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl("/chathub")
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+           
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    async Task Send()
+    {
+        await chatHub.Clients.All.SendAsync("SendMessage", "User", Message);
+        Message = string.Empty;
+    }
+}
